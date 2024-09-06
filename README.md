@@ -8,3 +8,6 @@ The name refers to the convention of using Blackboard Bold capital letters to de
 - Q for rational numbers
 - R for real numbers
 - C for complex numbers
+
+
+I'm Starting with Q because thats the one I actually need right now.
