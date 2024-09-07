@@ -56,9 +56,18 @@ unsigned int lcm(unsigned int, unsigned int);// could be long or long long
         /*! Constructor with unsigned numerator and signed denominator*/
         Q(unsigned int, int);
         
-        /*! Constructor with Boolean, signed numerator and signed denominator*/
+        /*! Constructor with signed numerator and signed denominator*/
         Q(int, int);
 
+        /*! Constructor with single unsigned int.
+            We assume the argument is the numerator and the denominator is 1.
+        */
+        Q(unsigned int);
+
+        /*! Constructor with single signed int.
+            We assume the argument is the numerator and the denominator is 1.
+        */
+        Q(int);
 
         /*! Addition operator*/
         friend Q operator+(const BlackboardBold::Q&, const BlackboardBold::Q&);
@@ -92,6 +101,9 @@ unsigned int lcm(unsigned int, unsigned int);// could be long or long long
         //Is there a default: bool operator>=(const Q&);
 
         };
+
+inline const Q Q0 = Q(false, 0, 1);
+inline const Q Q1 = Q(false, 1, 1);
 
 }
 

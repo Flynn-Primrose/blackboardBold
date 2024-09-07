@@ -60,6 +60,20 @@ Q::Q(int numerator, int denominator)
     reduce();
 }
 
+Q::Q(unsigned int numerator)
+{
+    this->isNegative = false;
+    this->numerator = numerator;
+    this->denominator = 1;
+}
+
+Q::Q(int numerator)
+{
+    this->isNegative = (numerator < 0);
+    this->numerator = std::abs(numerator);
+    this->denominator = 1;
+}
+
 /* Currently unused 
 unsigned int BlackboardBold::lcm(unsigned int x, unsigned int y)
 {
