@@ -26,7 +26,7 @@ EXES = $(patsubst $(XPL_DIR)/%.cpp, $(BIN_DIR)/%.exe, $(XPLS), $(BIN_DIR)/%.exe)
 
 # Target library files
 
-LIBS = $(BIN_DIR)/tulliotools2.lib
+LIBS = $(BIN_DIR)/blackboardBold.lib
 
 # Default target
 all: library tests examples
@@ -56,7 +56,7 @@ endif
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LIBS)
 
 # Linking
-$(TARGET): $(OBJS)
+$(LIBS): $(OBJS)
 ifeq ($(OS),Windows_NT)
 	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
 else

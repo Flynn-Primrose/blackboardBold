@@ -205,3 +205,30 @@ bool BlackboardBold::operator<(const Q& lhs, const Q& rhs)
     return truth_value;
 }   
 
+/* std::ostream& operator<< (std::ostream& os, const Q& q)
+{
+    if (q.isNegative)
+    {
+        os << '-';
+    }
+    os << q.numerator;
+    if (q.denominator != 1)
+    {
+        os << '/' << q.denominator;
+    }
+    return os;
+} */
+
+std::ostream& operator<<(std::ostream& os, const Q& q)
+{
+    if (q.isNegative)
+    {
+        os << '-';
+    }
+    os << q.numerator;
+    if (q.denominator != 1)
+    {
+        os << '/' << q.denominator;
+    }
+    return os;
+}

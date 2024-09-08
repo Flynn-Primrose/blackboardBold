@@ -3,6 +3,7 @@
 #ifndef _BLACKBOARD_BOLD_Q_HPP_
 #define _BLACKBOARD_BOLD_Q_HPP_
 
+#include <iostream> // for iostream
 namespace BlackboardBold
 {
     
@@ -99,6 +100,12 @@ unsigned int lcm(unsigned int, unsigned int);// could be long or long long
 
         ///*! Greater than or equal to operator*/
         //Is there a default: bool operator>=(const Q&);
+
+        /* IO Operators*/
+        /*! Output operator*/
+        /* friend std::ostream& operator<<(std::ostream& , const Q&); */
+
+        friend std::ostream& operator<<(std::ostream&, const Q&);
 
         };
 
