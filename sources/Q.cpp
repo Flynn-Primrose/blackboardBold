@@ -219,7 +219,7 @@ bool BlackboardBold::operator<(const Q& lhs, const Q& rhs)
     return os;
 } */
 
-std::ostream& operator<<(std::ostream& os, const Q& q)
+std::ostream& BlackboardBold::operator<<(std::ostream& os, const Q& q)
 {
     if (q.isNegative)
     {
