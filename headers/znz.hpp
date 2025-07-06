@@ -1,7 +1,7 @@
-/*! Defines zmod<int>*/
+/*! Defines znz<int>*/
 
-# ifndef _BLACKBOARD_BOLD_ZMOD_HPP_
-# define _BLACKBOARD_BOLD_ZMOD_HPP_
+# ifndef _BLACKBOARD_BOLD_ZNZ_HPP_
+# define _BLACKBOARD_BOLD_ZNZ_HPP_
 
 #include <type_traits> /*for std::is_integral*/
 
@@ -10,7 +10,7 @@
 namespace Blackboardbold{
 
     template<unsigned int modulus>
-    class zmod {
+    class znz {
         public:
         unsigned int value = 0; /*Initialize as the zero element*/
 
@@ -19,7 +19,7 @@ namespace Blackboardbold{
         /*! Constructors*/
 
         template<typename someType>
-        zmod(const someType& dividend){
+        znz(const someType& dividend){
             static_assert(std::is_integral<someType>::value, "The zmod constructor has been called on a non-integral type, this behaviour is not supported.");
 
             long long remainder = static_cast<long long>(dividend) % static_cast<long long>(modulus);

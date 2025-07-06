@@ -14,7 +14,7 @@ Obviously most of these already have well established analogues, the goal of thi
 To that end we provide class definitions and/or class templates for the following:
 
 - rat, a class for rational numbers.
-- znz, a class template for Z/nZ.
+- znz, a class template for Z/nZ. Currently in development.
 
 The goal in all cases is to match the behavior of the class, as closely as possible, to the behavior of the corresponding mathematical object,
 in a way that is computationally safe and efficient.
