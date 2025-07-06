@@ -1,15 +1,15 @@
-/*! Definitions for Q.hpp
+/*! Definitions for rat.hpp
 
 */
 
-#include "Q.hpp"
+#include "Rat.hpp"
 
 #include <cmath> // for std::abs
 
-using namespace BlackboardBold;
+using namespace blackboardBold;
 
 
-unsigned int BlackboardBold::gcd(unsigned int x, unsigned int y)
+unsigned int blackboardBold::gcd(unsigned int x, unsigned int y)
 {
     unsigned int temp;
     while (y != 0)
@@ -21,14 +21,22 @@ unsigned int BlackboardBold::gcd(unsigned int x, unsigned int y)
     return x;
 }
 
-void Q::reduce()
+void rat::reduce()
 {
     unsigned int divisor = gcd(numerator, denominator);
     numerator /= divisor;
     denominator /= divisor;
 }
 
-Q::Q(bool isNegative, unsigned int numerator, unsigned int denominator)
+rat::rat()
+{
+    this->isNegative = false; /*isPositive is also false for the zero element.*/
+    this->numerator = unsigned int (0);
+    this->denominator = unsigned int (1);
+    /*reduce(); is not necessary since it's already in lowest form */
+}
+
+rat::rat(bool isNegative, unsigned int numerator, unsigned int denominator)
 {
     this->isNegative = isNegative;
     this->numerator = numerator;
@@ -36,7 +44,7 @@ Q::Q(bool isNegative, unsigned int numerator, unsigned int denominator)
     reduce();
 }
 
-Q::Q(int numerator, unsigned int denominator)
+rat::rat(int numerator, unsigned int denominator)
 {
     this->isNegative = (numerator < 0);
     this->numerator = std::abs(numerator);
@@ -44,7 +52,7 @@ Q::Q(int numerator, unsigned int denominator)
     reduce();
 }
 
-Q::Q(unsigned int numerator, int denominator)
+rat::rat(unsigned int numerator, int denominator)
 {
     this->isNegative = (denominator < 0);
     this->numerator = numerator;
@@ -52,7 +60,7 @@ Q::Q(unsigned int numerator, int denominator)
     reduce();
 }
 
-Q::Q(int numerator, int denominator)
+rat::rat(int numerator, int denominator)
 {
     this->isNegative = (numerator < 0) ^ (denominator < 0);
     this->numerator = std::abs(numerator);
@@ -60,28 +68,21 @@ Q::Q(int numerator, int denominator)
     reduce();
 }
 
-Q::Q(unsigned int numerator)
+rat::rat(unsigned int numerator)
 {
     this->isNegative = false;
     this->numerator = numerator;
     this->denominator = 1;
 }
 
-Q::Q(int numerator)
+rat::rat(int numerator)
 {
     this->isNegative = (numerator < 0);
     this->numerator = std::abs(numerator);
     this->denominator = 1;
 }
 
-/* Currently unused 
-unsigned int BlackboardBold::lcm(unsigned int x, unsigned int y)
-{
-    return (x*y) / gcd(x, y);
-}
- */
-
-Q BlackboardBold::operator+(const Q& lhs, const Q& rhs)
+rat blackboardBold::operator+(const rat& lhs, const rat& rhs)
 {
     unsigned int new_denominator = lhs.denominator * rhs.denominator;
     unsigned int new_lhs_numerator = lhs.numerator * rhs.denominator;
@@ -129,97 +130,43 @@ Q BlackboardBold::operator+(const Q& lhs, const Q& rhs)
             break;
         }
     }
-    return Q(new_isNegative, new_numerator, new_denominator);
+    return rat(new_isNegative, new_numerator, new_denominator);
 }
 
-Q BlackboardBold::operator-(const Q& lhs, const Q& rhs)
+rat blackboardBold::operator-(const rat& lhs, const rat& rhs)
 {
-    return lhs + Q(!rhs.isNegative, rhs.numerator, rhs.denominator);
+    return lhs + rat(!rhs.isNegative, rhs.numerator, rhs.denominator);
 }
 
-Q BlackboardBold::operator*(const Q& lhs, const Q& rhs)
+rat blackboardBold::operator*(const rat& lhs, const rat& rhs)
 {
-    return Q(lhs.isNegative ^ rhs.isNegative, lhs.numerator * rhs.numerator, lhs.denominator * rhs.denominator);
+    return rat(lhs.isNegative ^ rhs.isNegative, lhs.numerator * rhs.numerator, lhs.denominator * rhs.denominator);
 }
 
-Q BlackboardBold::operator/(const Q& lhs, const Q& rhs)
+rat blackboardBold::operator/(const rat& lhs, const rat& rhs)
 {
-    return Q(lhs.isNegative ^ rhs.isNegative, lhs.numerator * rhs.denominator, lhs.denominator * rhs.numerator);//lhs * Q(rhs.isNegative, rhs.denominator, rhs.numerator) AKA invert and multiply
+    return rat(lhs.isNegative ^ rhs.isNegative, lhs.numerator * rhs.denominator, lhs.denominator * rhs.numerator);//lhs * rat(rhs.isNegative, rhs.denominator, rhs.numerator) AKA invert and multiply
 }
 
 
-bool BlackboardBold::operator==(const Q& lhs, const Q& rhs)
+bool blackboardBold::operator==(const rat& lhs, const rat& rhs)
 {
     return (lhs.isNegative == rhs.isNegative) && (lhs.numerator == rhs.numerator) && (lhs.denominator == rhs.denominator);
 }
 
 
-bool BlackboardBold::operator!=(const Q& lhs, const Q& rhs)
+bool blackboardBold::operator!=(const rat& lhs, const rat& rhs)
 {
     return  !(lhs == rhs);
 }
 
 
-bool BlackboardBold::operator<(const Q& lhs, const Q& rhs)
+bool blackboardBold::operator<(const rat& lhs, const rat& rhs)
 {
-    bool truth_value;
-
-    switch(lhs.isNegative)
-    {
-        case true:
-        {
-            switch(rhs.isNegative)
-            {
-                case true:
-                {
-                    truth_value = (lhs.numerator * rhs.denominator) < (rhs.numerator * lhs.denominator);
-                    break;
-                }
-                case false:
-                {
-                    truth_value = true;
-                    break;
-                }
-            }
-            break;
-        }
-        case false:
-        {
-            switch(rhs.isNegative)
-            {
-                case true:
-                {
-                    truth_value = false;
-                    break;
-                }
-                case false:
-                {
-                    truth_value = (lhs.numerator * rhs.denominator) < (rhs.numerator * lhs.denominator);
-                    break;
-                }
-            }
-            break;
-        }
-    }
-
-    return truth_value;
+    return !(rhs-lhs).isNegative;
 }   
 
-/* std::ostream& operator<< (std::ostream& os, const Q& q)
-{
-    if (q.isNegative)
-    {
-        os << '-';
-    }
-    os << q.numerator;
-    if (q.denominator != 1)
-    {
-        os << '/' << q.denominator;
-    }
-    return os;
-} */
-
-std::ostream& BlackboardBold::operator<<(std::ostream& os, const Q& q)
+std::ostream& blackboardBold::operator<<(std::ostream& os, const rat& q)
 {
     if (q.isNegative)
     {
@@ -232,3 +179,4 @@ std::ostream& BlackboardBold::operator<<(std::ostream& os, const Q& q)
     }
     return os;
 }
+

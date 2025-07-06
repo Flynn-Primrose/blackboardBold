@@ -4,7 +4,8 @@
 #define _BLACKBOARD_BOLD_Q_HPP_
 
 #include <iostream> // for iostream
-namespace BlackboardBold
+
+namespace blackboardBold
 {
     
 
@@ -16,10 +17,10 @@ unsigned int gcd(unsigned int, unsigned int);// could be long or long long
 /*! Least Common Multiple
 
 */
-unsigned int lcm(unsigned int, unsigned int);// could be long or long long
+//unsigned int lcm(unsigned int, unsigned int);// could be long or long long
 
 /*! The set of rational numbers*/
-    class Q
+    class rat
     {
     private:
 
@@ -34,62 +35,61 @@ unsigned int lcm(unsigned int, unsigned int);// could be long or long long
         /* Rule 0/3/5 stuff
             Im not sure if this stuff should be included yet. I am putting it here in comments as a reminder.
         */
-        ///*! Default constructor*/
-        //Q();
-
-        ///*! Copy constructor*/
-        //Q(const Q&);
-
-        ///*! Destructor*/
-        //~Q();
-
-        ///*! Assignment operator*/
-        //Q& operator=(const Q&);
+        /*! Constructors (default)*/
+        rat();
 
         /*! Constructors (non-default)*/
 
         /*! Constructor with Boolean, unsigned numerator and unsigned denominator*/
-        Q(bool, unsigned int, unsigned int);
+        rat(bool, unsigned int, unsigned int);
 
         /*! Constructor with signed numerator and unsigned denominator*/
-        Q(int, unsigned int);
+        rat(int, unsigned int);
         
         /*! Constructor with unsigned numerator and signed denominator*/
-        Q(unsigned int, int);
+        rat(unsigned int, int);
         
         /*! Constructor with signed numerator and signed denominator*/
-        Q(int, int);
+        rat(int, int);
 
         /*! Constructor with single unsigned int.
             We assume the argument is the numerator and the denominator is 1.
         */
-        Q(unsigned int);
+        rat(unsigned int);
 
         /*! Constructor with single signed int.
             We assume the argument is the numerator and the denominator is 1.
         */
-        Q(int);
+        rat(int);
+
+        /*! Conversion Operators*/
+        template<typename realType> // float, double, ect.
+        operator realType() const {
+            realType result = static_cast<realType>(this->numerator)/static_cast<realType>(this->denominator);
+            if (this->isNegative) {result *= (-1)};
+            return result;
+        }
 
         /*! Addition operator*/
-        friend Q operator+(const BlackboardBold::Q&, const BlackboardBold::Q&);
+        friend rat operator+(const rat&, const rat&);
 
         /*! Subtraction operator*/
-        friend Q operator-(const BlackboardBold::Q&, const BlackboardBold::Q&);
+        friend rat operator-(const rat&, const rat&);
 
         /*! Multiplication operator*/
-        friend Q operator*(const BlackboardBold::Q&, const BlackboardBold::Q&);
+        friend rat operator*(const rat&, const rat&);
 
         /*! Division operator*/
-        friend Q operator/(const BlackboardBold::Q&, const BlackboardBold::Q&);
+        friend rat operator/(const rat&, const rat&);
 
         /*! Equality operator*/
-        friend bool operator==(const BlackboardBold::Q&, const BlackboardBold::Q&);
+        friend bool operator==(const rat&, const rat&);
 
         /*! Inequality operator*/
-        friend bool operator!=(const BlackboardBold::Q&, const BlackboardBold::Q&);
+        friend bool operator!=(const rat&, const rat&);
 
         /*! Less than operator*/
-        friend bool operator<(const BlackboardBold::Q&, const BlackboardBold::Q&);
+        friend bool operator<(const rat&, const rat&);
 
         /* I am commenting these out to see if the compiler can deduce them given only the first comparison operator*/
         ///*! Greater than operator*/
@@ -101,16 +101,13 @@ unsigned int lcm(unsigned int, unsigned int);// could be long or long long
         ///*! Greater than or equal to operator*/
         //Is there a default: bool operator>=(const Q&);
 
-        /* IO Operators*/
-        /*! Output operator*/
-        /* friend std::ostream& operator<<(std::ostream& , const Q&); */
-
-        friend std::ostream& operator<<(std::ostream&, const Q&);
+        /*! Output Operations*/
+        friend std::ostream& operator<<(std::ostream& , const rat&);
 
         };
 
-inline const Q Q0 = Q(false, 0, 1);
-inline const Q Q1 = Q(false, 1, 1);
+inline const rat rat0 = rat(false, 0, 1);
+inline const rat rat1 = rat(false, 1, 1);
 
 }
 
