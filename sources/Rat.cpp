@@ -17,7 +17,7 @@ void rat::reduce()
     this->denominator /= divisor;
 
     if (this->numerator == 0){
-        this->isNegative = 0;
+        this->isNegative = false;
         this->denominator = 1;
     }
 }
