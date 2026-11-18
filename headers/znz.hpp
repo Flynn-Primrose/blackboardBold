@@ -3,9 +3,13 @@
 # ifndef _BLACKBOARD_BOLD_ZNZ_HPP_
 # define _BLACKBOARD_BOLD_ZNZ_HPP_
 
-#include <type_traits> /*for std::is_integral*/
+#include <type_traits> /*std::is_integral*/
 
-#include <iostream> /*for io ops*/
+#include <iostream> /*io ops*/
+
+#include <stdexcept> /*std::domain_error*/
+
+#include "gcd.hpp"
 
 namespace blackboardBold{
 
@@ -47,9 +51,43 @@ namespace blackboardBold{
             return znz(lhs.value * rhs.value);
         }
 
+        /*! Inevitability check*/
+        friend bool isInvertible(const znz& z){
+            return (gcd(z.value, modulus) == 1)
+        }
+
+        /*! Invert */
+        friend znz invert(const znz& z){
+            if (!isInvertible(z)){
+                throw std::domain_error("Modular inverse requested for uninvertible element.")
+            }
+            long long y=0, x=1;
+            long long a = z.value;
+            long long n = modulus;
+            while (a>1){
+                long long q = a/n; // Quotient
+                long long t = n;
+                
+                // Update n and a (standard Euclidean step)
+                n = a % n;
+                a = t;
+                t = y;
+
+                // Update y and x
+                y = x - q * y;
+                x = t;
+            }
+            return znz(x);
+        }
+
         /*! Division operator*/
         friend znz operator/(const znz& lhs, const znz& rhs){
             /*Only possible if rhs has an inverse*/
+            if (!isInvertible(rhs)){
+                throw std::domain_error("Modular division attempted with an uninvertible denominator.")
+            }
+
+            return lhs * invert(rhs);  
         }
 
         /*! Equality operator*/

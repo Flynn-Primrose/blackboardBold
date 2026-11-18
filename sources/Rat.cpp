@@ -1,25 +1,14 @@
-/*! Definitions for rat.hpp
-
+/*! 
+Definitions for rat.hpp
 */
 
 #include "Rat.hpp"
+#include "gcd.hpp"
 
 #include <cmath> // for std::abs
 
 using namespace blackboardBold;
 
-
-unsigned int blackboardBold::gcd(unsigned int x, unsigned int y)
-{
-    unsigned int temp;
-    while (y != 0)
-    {
-        temp = y;
-        y = x % temp;
-        x = temp;
-    }
-    return x;
-}
 
 void rat::reduce()
 {

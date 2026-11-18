@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-using namespace BlackboardBold;
+using namespace blackboardBold;
 
 int main(){
     std::cout << "0 as a rational: " << rat0 << std::endl;

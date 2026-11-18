@@ -9,10 +9,7 @@ namespace blackboardBold
 {
     
 
-/*! Greatest Common Denominator
 
-*/
-unsigned int gcd(unsigned int, unsigned int);// could be long or long long
 
 /*! Least Common Multiple
 
