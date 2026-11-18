@@ -7,16 +7,20 @@
 
 #include <iostream> /*for io ops*/
 
-namespace Blackboardbold{
+namespace blackboardBold{
 
     template<unsigned int modulus>
     class znz {
+        static_assert(modulus > 0, "Modulus must be greater than zero.")
+
         public:
-        unsigned int value = 0; /*Initialize as the zero element*/
+        unsigned int value; 
 
         //void reduce(); // Necessary?
 
         /*! Constructors*/
+
+        znz() : value(0) {} /*By default, initialize as the zero element*/
 
         template<typename someType>
         znz(const someType& dividend){
@@ -26,6 +30,47 @@ namespace Blackboardbold{
             if (remainder < 0) remainder += modulus; // so that remainder is positive
 
             this->value = static_cast<unsigned int>(remainder);
+        }
+
+        /*! Addition operator*/
+        friend znz operator+(const znz& lhs, const znz& rhs){
+            return znz(lhs.value + rhs.value);
+        }
+
+        /*! Subtraction operator*/
+        friend znz operator-(const znz& lhs, const znz& rhs){
+            return znz(lhs.value - rhs.value);
+        }
+
+        /*! Multiplication operator*/
+        friend znz operator*(const znz& lhs, const znz& rhs){
+            return znz(lhs.value * rhs.value);
+        }
+
+        /*! Division operator*/
+        friend znz operator/(const znz& lhs, const znz& rhs){
+            /*Only possible if rhs has an inverse*/
+        }
+
+        /*! Equality operator*/
+        friend bool operator==(const znz& lhs, const znz& rhs){
+            return (lhs.value == rhs.value);
+        }
+
+        /*! Inequality operator*/
+        friend bool operator!=(const znz& lhs, const znz& rhs){
+            return (lhs.value != rhs.value);
+        }
+
+        /*! Less than operator*/
+        friend bool operator<(const znz& lhs, const znz& rhs){
+            return (lhs.value < rhs.value);
+        }
+
+        /*! Output Operations*/
+        friend std::ostream& operator<<(std::ostream& os, const znz& z){
+            os << z.value << " (mod " << modulus << ')';
+            return os;
         }
 
     };

@@ -23,16 +23,21 @@ unsigned int blackboardBold::gcd(unsigned int x, unsigned int y)
 
 void rat::reduce()
 {
-    unsigned int divisor = gcd(numerator, denominator);
-    numerator /= divisor;
-    denominator /= divisor;
+    unsigned int divisor = gcd(this->numerator, this->denominator);
+    this->numerator /= divisor;
+    this->denominator /= divisor;
+
+    if (this->numerator == 0){
+        this->isNegative = 0;
+        this->denominator = 1;
+    }
 }
 
 rat::rat()
 {
     this->isNegative = false; /*isPositive is also false for the zero element.*/
-    this->numerator = unsigned int (0);
-    this->denominator = unsigned int (1);
+    this->numerator = 0;
+    this->denominator = 1;
     /*reduce(); is not necessary since it's already in lowest form */
 }
 
