@@ -2,7 +2,7 @@
 Definitions for rat.hpp
 */
 
-#include "Rat.hpp"
+#include "rat.hpp"
 #include "gcd.hpp"
 
 #include <cmath> // for std::abs

@@ -1,85 +1,62 @@
-# Compiler and flags
-CXX = g++
-CXXFLAGS = -Wall -g -Iheaders
+CXX      := g++
+CPPFLAGS := -Iheaders -MMD -MP
+CXXFLAGS := -Wall -Wextra -g -std=c++20
 
-# Directories
-SRC_DIR = sources
-OBJ_DIR = obj
-BIN_DIR = bin
-XPL_DIR = examples
-TST_DIR = tests
+SRC_DIR := sources
+OBJ_DIR := obj
+BIN_DIR := bin
+TST_DIR := tests
 
-# Find all source files in the SRC_DIR
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+SRCS      := $(wildcard $(SRC_DIR)/*.cpp)
+OBJS      := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
+TSTS      := $(wildcard $(TST_DIR)/*.cpp)
+TST_OBJ_DIR := $(OBJ_DIR)/tests
+TST_OBJS    := $(patsubst $(TST_DIR)/%.cpp,$(TST_OBJ_DIR)/%.o,$(TSTS))
+TEST_BIN    := $(BIN_DIR)/run_tests.exe
+LIB       := $(BIN_DIR)/blackboardBold.lib
 
-# Create a list of object files by replacing .cpp with .o
-OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
-
-# Find all example files in the XPL_DIR
-XPLS = $(wildcard $(XPL_DIR)/*.cpp)
-
-# Find all test files in the TST_DIR
-TSTS = $(wildcard $(TST_DIR)/*.cpp)
-
-# Create a list of executible files by replacing .cpp with .exe
-EXES = $(patsubst $(XPL_DIR)/%.cpp, $(BIN_DIR)/%.exe, $(XPLS), $(BIN_DIR)/%.exe)
-
-# Target library files
-
-LIBS = $(BIN_DIR)/blackboardBold.lib
-
-# Default target
-all: library tests examples
-
-tests: $(TSTS)
-
-examples: $(EXES)
-
-library: $(LIBS)
-
-# Compile Tests
-$(BIN_DIR)/%.exe: $(TST_DIR)/%.cpp
+# Platform-specific commands, defined once
 ifeq ($(OS),Windows_NT)
-	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
+    MKDIR = if not exist "$(subst /,\,$@)" mkdir "$(subst /,\,$@)"
+    CLEAN = -rmdir /s /q $(OBJ_DIR) & -rmdir /s /q $(BIN_DIR)
 else
-	@mkdir -p $(BIN_DIR)
+    MKDIR = mkdir -p $@
+    CLEAN = rm -rf $(OBJ_DIR) $(BIN_DIR)
 endif
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LIBS)
 
-# Compile Example
-$(BIN_DIR)/%.exe: $(XPL_DIR)/%.cpp
-ifeq ($(OS),Windows_NT)
-	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
-else
-	@mkdir -p $(BIN_DIR)
-endif
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LIBS)
+all: library tests
 
-# Linking
-$(LIBS): $(OBJS)
-ifeq ($(OS),Windows_NT)
-	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
-else
-	@mkdir -p $(BIN_DIR)
-endif
+library: $(LIB)
+tests: $(TEST_BIN)
+
+# Archive the library
+$(LIB): $(OBJS) | $(BIN_DIR)
 	ar rcs $@ $^
 
-# Compile Objects
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-ifeq ($(OS),Windows_NT)
-	if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
-else
-	@mkdir -p $(OBJ_DIR)
-endif
-	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+# Compile objects
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-# Clean up
+# Link all test objects + the library into one executable
+$(TEST_BIN): $(TST_OBJS) $(LIB) | $(BIN_DIR)
+	$(CXX) $(TST_OBJS) $(LIB) -o $@
+
+# Compile each test file to an object
+$(TST_OBJ_DIR)/%.o: $(TST_DIR)/%.cpp | $(TST_OBJ_DIR)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+# Build and run
+test: $(TEST_BIN)
+	./$(TEST_BIN)
+
+# Create directories on demand (add the new one)
+$(OBJ_DIR) $(BIN_DIR) $(TST_OBJ_DIR):
+	$(MKDIR)
+
 clean:
-ifeq ($(OS),Windows_NT)
-	del $(OBJ_DIR) $(BIN_DIR)
-else
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
-endif
-	
+	$(CLEAN)
 
-.PHONY: all clean
+.PHONY: all library tests test clean
+
+# Pull in auto-generated header dependency files (silently skip if absent)
+-include $(OBJS:.o=.d) $(TST_OBJS:.o=.d)
